@@ -3,5 +3,6 @@
     "version": "0.0.1",
     "main": "jquery.pjax.js",
     "dependencies": {
+        "components/jquery": "1.0.0"
     }
 }
