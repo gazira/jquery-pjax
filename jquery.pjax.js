@@ -857,4 +857,4 @@ $.support.pjax =
 
 $.support.pjax ? enable() : disable()
 
-})(jQuery);
+})(require('components/jquery'));
