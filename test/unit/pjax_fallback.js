@@ -116,7 +116,6 @@ asyncTest("adds entry to browser history"+s, function() {
       frame.history.back()
     } else if (count == 2) {
       equal(frame.location.pathname, "/home.html")
-      frame.history.forward()
       start()
     }
   }
@@ -314,6 +313,54 @@ asyncTest("POST with data object"+s, function() {
   })
 })
 
+asyncTest("GET with data array"+s, function() {
+  var frame = this.frame
+
+  this.loaded = function() {
+    equal(frame.location.pathname, "/env.html")
+    equal(frame.location.search, "?foo%5B%5D=bar&foo%5B%5D=baz")
+
+    var env = JSON.parse(frame.$("#env").text())
+    equal(env['REQUEST_METHOD'], "GET")
+    var expected = {'foo': ['bar', 'baz']};
+    if (!disabled) expected._pjax = "#main"
+    deepEqual(env['rack.request.query_hash'], expected)
+
+    start()
+  }
+
+  frame.$.pjax({
+    type: 'GET',
+    url: "env.html",
+    data: [{name: "foo[]", value: "bar"}, {name: "foo[]", value: "baz"}],
+    container: "#main"
+  })
+})
+
+asyncTest("POST with data array"+s, function() {
+  var frame = this.frame
+
+  this.loaded = function() {
+    equal(frame.location.pathname, "/env.html")
+    equal(frame.location.search, "")
+
+    var env = JSON.parse(frame.$("#env").text())
+    equal(env['REQUEST_METHOD'], "POST")
+    var expected = {'foo': ['bar', 'baz']};
+    if (!disabled) expected._pjax = "#main"
+    deepEqual(env['rack.request.form_hash'], expected)
+
+    start()
+  }
+
+  frame.$.pjax({
+    type: 'POST',
+    url: "env.html",
+    data: [{name: "foo[]", value: "bar"}, {name: "foo[]", value: "baz"}],
+    container: "#main"
+  })
+})
+
 asyncTest("GET with data string"+s, function() {
   var frame = this.frame
 
@@ -356,6 +403,24 @@ asyncTest("POST with data string"+s, function() {
     data: "foo=bar",
     container: "#main"
   })
+})
+
+asyncTest("handle form submit"+s, function() {
+  var frame = this.frame
+
+  frame.$(frame.document).on("submit", "form", function(event) {
+    frame.$.pjax.submit(event, "#main")
+  })
+
+  this.loaded = function() {
+    var env = JSON.parse(frame.$("#env").text())
+    var expected = {foo: "1", bar: "2"}
+    if (!disabled) expected._pjax = "#main"
+    deepEqual(env['rack.request.query_hash'], expected)
+    start()
+  }
+
+  frame.$("form").submit()
 })
 
 })
