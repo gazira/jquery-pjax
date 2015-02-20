@@ -1,0 +1,21 @@
+{
+    "name": "jquery-pjax",
+    "version": "1.9.4",
+    "main": "jquery.pjax.js",
+    "keywords": [
+        "jquery", "pjax"
+    ],
+    "spm": {
+        "main": "jquery.pjax.js",
+        "dependencies": {
+            "jquery": "1.11.1"
+        },
+        "devDependencies": {
+        },
+        "tests": "",
+        "ignore": [
+            "components"
+        ],
+        "buildArgs": ""
+    }
+}
