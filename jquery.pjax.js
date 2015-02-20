@@ -898,5 +898,4 @@ $.support.pjax =
 
 $.support.pjax ? enable() : disable()
 
-module.exports = $.pjax;
-})(require('jquery'));
+})(jQuery);
